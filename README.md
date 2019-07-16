@@ -1,5 +1,5 @@
 # BetKeeper
-### Hobby project to keep score of private 1v1 $1 bets.
+### Remake of an old site I built -- keeps score of private 1v1 $1 bets.
 
 <br/>
 
