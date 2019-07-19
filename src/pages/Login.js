@@ -6,41 +6,35 @@ dotenv.config();
 
 class Login extends Component {
     state = {
-        isAuthenticated: false,
-        user: null,
-        token: ""
+        name: '',
+        email: ''
     };
+
+    setToken = (res) => {
+        this.setState({
+            name: res.profileObj.givenName,
+            email: res.profileObj.email
+        })
+    }
 
     render() {
 
         const responseGoogle = (response) => {
             console.log(response);
+            this.setToken(response);
         }
 
-        let content = this.state.isAuthenticated ?
-            (
-                <div>
-                    <div>
-                        <button onClick={this.logout} className="button">
-                            Log out
-                        </button>
-                    </div>
-                </div>
 
-            ) :
-            (
+
+        return (
+            <div className="Login">
                 <GoogleLogin
-                    clientId={process.env.GOOGLE_CLIENT_ID}
+                    clientId={process.env.REACT_APP_G_CLIENT_ID}
                     buttonText="Login"
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
                     cookiePolicy={'single_host_origin'}
                 />
-            );
-
-        return (
-            <div className="Login">
-                {content}
             </div>
         )
 
