@@ -1,27 +1,34 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { GoogleLogin } from 'react-google-login';
+import API from '../utils/API';
 import dotenv from 'dotenv';
 dotenv.config();
 
 
 class Login extends Component {
     state = {
-        name: '',
-        email: ''
+        email: '',
+        name: ''
     };
 
-    setToken = (res) => {
+    setName = (res) => {
         this.setState({
-            name: res.profileObj.givenName,
-            email: res.profileObj.email
+            email: res.profileObj.email,
+            name: res.profileObj.givenName
         })
     }
 
     render() {
 
         const responseGoogle = (response) => {
-            console.log(response);
-            this.setToken(response);
+            this.setName(response);
+            if (response.tokenObj.id_token) {
+                API.saveUser({
+                    email: this.state.email,
+                    name: this.state.name
+                }).then(() => this.props.yesAuthenticated())
+            }
+
         }
 
 

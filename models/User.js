@@ -1,9 +1,9 @@
-let mongoose = require("mongoose");
-let Schema = mongoose.Schema;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 // const findOrCreate = require('mongoose-find-or-create');
 
 
-let UserSchema = new Schema({
+const UserSchema = new Schema({
 
   email: {
     type: String,
@@ -28,7 +28,7 @@ let UserSchema = new Schema({
 });
 
 // This creates our model from the above schema, using mongoose's model method
-let User = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
 // Export the Article model
 module.exports = User;

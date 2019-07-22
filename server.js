@@ -1,36 +1,32 @@
-require("dotenv").config();
 const express = require("express");
-const logger = require("morgan");
+
 const mongoose = require("mongoose");
-
-const PORT = process.env.PORT || 8080;
+const routes = require("./routes");
 const app = express();
+const PORT = process.env.PORT || 3001;
 
-
-// Middleware
-app.use(logger("dev"));
-app.use(express.urlencoded({ extended: false }));
+// Configure body parsing for AJAX requests
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("public"));
+// Serve up static assets
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("clientSide/build"));
+}
+
+// Add routes, both API and view
+app.use(routes);
+
+// Connect to the Mongo DB
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost/bet-track",
+  {
+    useCreateIndex: true,
+    useNewUrlParser: true
+  }
+);
 
 
-
-
-
-
-
-// ---------------------------------------------------
-const userRouter = require("./routes/userRoute");
-// require("./routes/htmlRoutes")(app);
-// ---------------------------------------------------
-
-
-
-app.listen(PORT, function () {
-  console.log("App running on port " + PORT + "!");
-});
-
-
-
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/bet-track";
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+// Start the API server
+app.listen(PORT, () =>
+  console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`)
+);

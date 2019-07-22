@@ -1,28 +1,9 @@
-const db = require('../models');
-const axios = require('axios');
-const server = require(`../server.js`);
-
-getOrCreate = (req, res) => {
-    const user = req.body;
-    const aUser = new db.User(user)
-
-    aUser.save().then(() => {
-        return res.status(200).json({
-            success: true,
-            email: aUser.email,
-            message: 'user created!'
-        })
-            .catch(error => {
-                return res.status(400).json({
-                    error,
-                    message: 'Nope',
-                })
-            })
-
-    })
-
-}
+const db = require("../models");
 
 module.exports = {
-    getOrCreate
-}
+    create: function (req, res) {
+        db.User.create(req.body)
+            .then(dbUser => res.json(dbUser))
+            .catch(err => res.status(422).json(err))
+    }
+};
