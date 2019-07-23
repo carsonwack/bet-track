@@ -6,7 +6,7 @@ dotenv.config();
 class Login extends Component {
     render() {
         return (
-            <div className="Home">
+            <div className="Home bg-red-200">
                 <h1>Home</h1>
             </div>
         )

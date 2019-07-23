@@ -18,6 +18,10 @@ class Login extends Component {
         })
     }
 
+    login = () => {
+        this.props.yesLoggedIn();
+    }
+
     render() {
 
         const responseGoogle = (response) => {
@@ -26,15 +30,12 @@ class Login extends Component {
                 API.saveUser({
                     email: this.state.email,
                     name: this.state.name
-                }).then(() => this.props.yesAuthenticated())
+                }).then(() => this.login()).then(() => this.props.history.push('/'))
             }
-
         }
 
-
-
         return (
-            <div className="Login">
+            <div className="Login mt-48 text-center">
                 <GoogleLogin
                     clientId={process.env.REACT_APP_G_CLIENT_ID}
                     buttonText="Login"

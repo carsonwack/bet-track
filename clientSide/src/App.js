@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from "react-router-dom";
-import { GoogleLogin } from 'react-google-login';
-import API from './utils/API';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import NoMatch from './pages/NoMatch';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -11,35 +10,57 @@ dotenv.config();
 class App extends Component {
 
   state = {
-    isAuthenticated: false
+    loggedIn: false
   }
 
-  yesAuthenticated = () => {
-    this.setState({ isAuthenticated: true })
+  yesLoggedIn = () => {
+    this.setState({
+      loggedIn: true
+    })
   }
 
 
   render() {
     return (
-        <Router>
-          <div>
-            <ul>
-              <li><Link to='/login'>Login Page</Link></li>
-              <li><Link to='/home'>Home Page</Link></li>
-            </ul>
-            <Route path='/login' render={() => <Login yesAuthenticated={this.yesAuthenticated} />} />
-            <Route path='/home' component={Home} />
-          </div>
-        </Router>
+
+      <Router>
+        <Switch>
+          <ProtectedRoute exact path='/' loggedIn={this.state.loggedIn} component={Home} />
+          <Route exact path='/login' render={(props) => <Login {...props} yesLoggedIn={this.yesLoggedIn} />} />
+          <Route component={NoMatch} />
+        </Switch>
+      </Router>
+
     )
   }
 }
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={(props) => (
-    this.state.isAuthenticated ? <Component {...props} /> : <Redirect to='/login' />
-  )} />
-)
+
+
+
+
+const ProtectedRoute = ({ component: Comp, loggedIn, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        loggedIn ? (
+          <Comp {...props} />
+        ) : (
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: { from: props.location }
+              }}
+            />
+          )
+      }
+    />
+  );
+};
+
+
+
 
 
 export default App;
