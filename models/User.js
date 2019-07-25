@@ -10,7 +10,12 @@ const UserSchema = new Schema({
     required: true
   },
 
-  name: {
+  firstName: {
+    type: String,
+    required: true
+  },
+
+  lastName: {
     type: String,
     required: true
   },
@@ -19,16 +24,21 @@ const UserSchema = new Schema({
   // The ref property links the ObjectId to the Match model
   // This allows us to populate the User with an associated Note
   match: [
-      {
-          type: Schema.Types.ObjectId,
-          ref: "Match"
-      }
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Match"
+    }
   ]
 
 });
 
-// This creates our model from the above schema, using mongoose's model method
-const User = mongoose.model("User", UserSchema);
+// If user isn't already in the DB, creates a new account
+UserSchema.static('findOneOrCreate', async function findOneOrCreate(condition, user) {
+  const one = await this.findOne(condition);
 
-// Export the Article model
+  return one || this.create(user);
+})
+
+
+const User = mongoose.model("User", UserSchema);
 module.exports = User;

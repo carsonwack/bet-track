@@ -8,14 +8,16 @@ dotenv.config();
 class Login extends Component {
     state = {
         email: '',
-        name: ''
+        firstName: '',
+        lastName: ''
     };
 
     setName = (res) => {
         this.setState({
             email: res.profileObj.email,
-            name: res.profileObj.givenName
-        })
+            firstName: res.profileObj.givenName,
+            lastName: res.profileObj.familyName
+        }, () => localStorage.setItem('currentUser', this.state.email))
     }
 
     login = () => {
@@ -29,8 +31,11 @@ class Login extends Component {
             if (response.tokenObj.id_token) {
                 API.saveUser({
                     email: this.state.email,
-                    name: this.state.name
-                }).then(() => this.login()).then(() => this.props.history.push('/'))
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName
+                })
+                .then(() => this.login())
+                .then(() => this.props.history.push('/'))
             }
         }
 
@@ -45,7 +50,6 @@ class Login extends Component {
                 />
             </div>
         )
-
 
     }
 }
