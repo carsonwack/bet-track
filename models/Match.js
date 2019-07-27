@@ -4,24 +4,14 @@ let Schema = mongoose.Schema;
 
 let MatchSchema = new Schema({
 
-  googleIds: {
-    type: Array,
-    required: true
-  },
+  emails: { type: [String] },
 
-  scores: {
-    type: Map,
-    of: Number
-  },
+  scores: { type: [String] },
 
-  propLabel: {
-    type: Array
-  }
+  propLabels: { type: [String] }
 
 });
 
-// This creates our model from the above schema, using mongoose's model method
-let Match = mongoose.model("Match", MatchSchema);
 
-// Export the Article model
+let Match = mongoose.model("Match", MatchSchema);
 module.exports = Match;
