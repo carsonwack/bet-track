@@ -13,11 +13,19 @@ export default {
 
 
     // MATCH
+    getAllMatches: function(userEmail) {
+        return axios.get('/api/matches/' + userEmail)
+    },
+
     startMatch: function(matchData) {
         return axios.post('/api/matches', matchData)
     },
 
     getMatch: function(id) {
         return axios.get('/api/matches/' + id)
+    },
+
+    addBet: function(matchId, bet) {
+        return axios.post('/api/matches/' + matchId, bet)
     }
 };

@@ -5,9 +5,16 @@ const matchController = require('../../controllers/matchController');
 router.route('/')
     .post(matchController.start)
 
+
+router.route('/:email')
+    .get(matchController.getAllMatches)
+
+
+
 // Matches with '/api/matches/:id'
 router
     .route('/:id')
     .get(matchController.findById)
+    .post(matchController.addBet)
 
 module.exports = router;

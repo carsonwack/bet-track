@@ -8,7 +8,11 @@ let MatchSchema = new Schema({
 
   scores: { type: [String] },
 
-  propLabels: { type: [String] }
+  propBets: [{
+    propLabels: String,
+    selected: String,
+    userWon: String
+  }]
 
 });
 
