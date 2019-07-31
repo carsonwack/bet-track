@@ -14,7 +14,7 @@ export default {
 
     // MATCH
     getAllMatches: function(userEmail) {
-        return axios.get('/api/matches/' + userEmail)
+        return axios.get('/api/matches/email/' + userEmail)
     },
 
     startMatch: function(matchData) {
@@ -27,5 +27,9 @@ export default {
 
     addBet: function(matchId, bet) {
         return axios.post('/api/matches/' + matchId, bet)
+    },
+
+    getAllBets: function(matchId) {
+        return axios.get('/api/matches/bets/' + matchId)
     }
 };

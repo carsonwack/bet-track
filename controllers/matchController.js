@@ -3,12 +3,14 @@ const db = require("../models");
 module.exports = {
 
     start: function (req, res) {
-        const scores = [`${req.body.userEmail} ${0}`, `${req.body.opponentEmail} ${0}`]
+        const scoresArray = [`${req.body.userEmail} ${0}`, `${req.body.opponentEmail} ${0}`]
+        const nameArray = [`${req.body.userEmail} ${req.body.name1}`, `${req.body.opponentEmail} ${req.body.name2}`]
         db.Match.create({
             emails: [req.body.userEmail, req.body.opponentEmail],
-            scores: scores
+            scores: scoresArray,
+            names: nameArray
         })
-            .then(match => res.json(match))
+            .then(match => { res.json(match) })
             .catch(err => res.status(422).json(err))
     },
 
@@ -37,9 +39,12 @@ module.exports = {
         db.Match.find({ emails: req.params.email })
             .then(match => res.json(match))
             .catch(err => res.status(422).json(err))
+    },
+
+    getAllBets: function (req, res) {
+        db.Match.findById(req.params.id, "propBets")
+            .then(match => res.json(match))
+            .catch(err => res.status(422).json(err))
     }
 };
-
-
-
 

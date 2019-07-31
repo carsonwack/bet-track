@@ -5,11 +5,13 @@ const matchController = require('../../controllers/matchController');
 router.route('/')
     .post(matchController.start)
 
-
-router.route('/:email')
+// Matches with '/api/matches/email/:email'
+router.route('/email/:email')
     .get(matchController.getAllMatches)
 
-
+// Matches with '/api/matches/bets/:id'
+router.route('/bets/:id')
+.get(matchController.getAllBets)
 
 // Matches with '/api/matches/:id'
 router

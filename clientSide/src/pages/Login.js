@@ -17,7 +17,12 @@ class Login extends Component {
             email: res.profileObj.email,
             firstName: res.profileObj.givenName,
             lastName: res.profileObj.familyName
-        }, () => localStorage.setItem('currentUser', this.state.email))
+        }, () => this.setLocal(this.state.email, `${this.state.firstName} ${this.state.lastName}`) )
+    }
+
+    setLocal = (userEmail, nameOfUser) => {
+        localStorage.setItem('currentUser', this.state.email)
+        localStorage.setItem('currentUserName', nameOfUser)
     }
 
     login = () => {

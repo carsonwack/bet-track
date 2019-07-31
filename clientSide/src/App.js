@@ -14,11 +14,8 @@ class App extends Component {
   }
 
   yesLoggedIn = () => {
-    this.setState({
-      loggedIn: true
-    })
+    this.setState({ loggedIn: true })
   }
-
 
   render() {
     return (
