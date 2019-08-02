@@ -21,6 +21,10 @@ router.route('/betUpdate/:id')
 router.route('/betWonLost/:id')
     .put(matchController.wonLostChosen)
 
+// Matches with '/api/matches/:matchId/:betId'
+router.route('/:matchId/:betId')
+    .delete(matchController.remove)
+
 // Matches with '/api/matches/:id'
 router
     .route('/:id')

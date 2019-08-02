@@ -39,5 +39,9 @@ export default {
 
     wonLostChosen: function(matchId, scoresBetIdAndBool) {
         return axios.put('/api/matches/betWonLost/' + matchId, scoresBetIdAndBool)
+    },
+
+    deleteBet: function(matchId, betId) {
+        return axios.delete(`/api/matches/${matchId}/${betId}`)
     }
 };

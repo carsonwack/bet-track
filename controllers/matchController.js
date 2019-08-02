@@ -65,5 +65,13 @@ module.exports = {
             .then(match => res.json(match))
             .catch(err => res.status(422).json(err))
     },
-};
 
+    remove: function (req, res) {
+        console.log(req.params.matchId)
+        db.Match.findOneAndUpdate({ _id: req.params.matchId },
+        { $pull: { propBets: { _id: req.params.betId }}},
+        { useFindAndModify: false })
+        .then(match => res.json(match))
+        .catch(err => res.status(422).json(err))
+    }
+};

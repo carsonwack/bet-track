@@ -38,7 +38,7 @@ class Home extends Component {
 
         API.getAllUsers()
             .then(res => {
-                let otherUsers = res.data.filter( user => user.email !== getUserEmail)
+                let otherUsers = res.data.filter(user => user.email !== getUserEmail)
                 this.setState({ users: otherUsers })
             })
     }
@@ -90,13 +90,13 @@ class Home extends Component {
         let { users, userTyped } = this.state;
         if (userTyped !== '') {
             let currentLetters = userTyped.toLowerCase();
-            let matchingUsers = users.filter( user => 
-            currentLetters === user.firstName.slice(0, currentLetters.length).toLowerCase() 
-            || currentLetters === user.lastName.slice(0, currentLetters.length).toLowerCase() )
+            let matchingUsers = users.filter(user =>
+                currentLetters === user.firstName.slice(0, currentLetters.length).toLowerCase()
+                || currentLetters === user.lastName.slice(0, currentLetters.length).toLowerCase())
 
             this.setState({
                 filtered: matchingUsers
-            })  
+            })
         }
         else {
             this.setState({
@@ -231,6 +231,11 @@ class Home extends Component {
         }
     }
 
+    deletePropBet = (betId) => {
+        API.deleteBet(this.state.currentMatchId, betId)
+            .then(() => this.getAllBets());
+    }
+
     render() {
         return (
             <div className="Home static bg-blue-200">
@@ -338,6 +343,11 @@ class Home extends Component {
                                                 >
                                                     No
                                                 </button>
+                                                <div
+                                                    className="cursor-pointer"
+                                                    onClick={() => this.deletePropBet(propBet._id)}>
+                                                    x
+                                                </div>
                                                 {propBet.selected !== 'notYet' ?
                                                     (
                                                         <div>
