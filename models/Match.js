@@ -13,7 +13,7 @@ let MatchSchema = new Schema({
   propBets: [{
     propLabels: String,
     selected: String,
-    userWon: String
+    whoWon: String
   }]
 
 });

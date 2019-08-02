@@ -45,6 +45,25 @@ module.exports = {
         db.Match.findById(req.params.id, "propBets")
             .then(match => res.json(match))
             .catch(err => res.status(422).json(err))
-    }
+    },
+
+    yesChosen: function (req, res) {
+        db.Match.updateOne({ "_id": req.params.id, "propBets._id": req.body.betId },
+            {
+                $set: { "propBets.$.selected": req.body.val }
+            })
+            .then(match => res.json(match))
+            .catch(err => res.status(422).json(err))
+    },
+
+    wonLostChosen: function (req, res) {
+        db.Match.findByIdAndUpdate(req.params.id, { scores: [req.body.myString, req.body.oppString] }, { useFindAndModify: false })
+            .then(() => (db.Match.updateOne({ "_id": req.params.id, "propBets._id": req.body.betId },
+                {
+                    $set: { "propBets.$.whoWon": req.body.won }
+                })))
+            .then(match => res.json(match))
+            .catch(err => res.status(422).json(err))
+    },
 };
 

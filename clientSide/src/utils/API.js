@@ -31,5 +31,13 @@ export default {
 
     getAllBets: function(matchId) {
         return axios.get('/api/matches/bets/' + matchId)
+    },
+
+    yesChosen: function(matchId, betIdAndBool) {
+        return axios.put('/api/matches/betUpdate/' + matchId, betIdAndBool)
+    },
+
+    wonLostChosen: function(matchId, scoresBetIdAndBool) {
+        return axios.put('/api/matches/betWonLost/' + matchId, scoresBetIdAndBool)
     }
 };

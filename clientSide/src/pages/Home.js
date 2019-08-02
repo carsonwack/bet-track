@@ -11,11 +11,11 @@ class Home extends Component {
         users: [],
         filtered: [],
         showModal: false,
-        modalId: '',
         modalEmail: '',
         modalName: '',
         userEmail: '',
         userFullName: '',
+        opponentName: '',
         matches: [],
         youser: null,
         oppser: null,
@@ -24,7 +24,8 @@ class Home extends Component {
         createBetStarted: false,
         currentMatchId: '',
         betTyped: '',
-        userTyped: ''
+        userTyped: '',
+        noMatchesMessage: 'No current matches'
     }
 
     componentDidMount() {
@@ -35,22 +36,10 @@ class Home extends Component {
             userFullName: getUserName
         }, () => { this.getAllMatches() })
 
-
-
         API.getAllUsers()
             .then(res => {
-                let userInfo = [];
-                for (let userObj of res.data) {
-                    if (userObj.email !== getUserEmail) {
-                        userInfo.push({
-                            _id: userObj._id,
-                            email: userObj.email,
-                            firstName: userObj.firstName,
-                            lastName: userObj.lastName
-                        })
-                    }
-                }
-                this.setState({ users: userInfo })
+                let otherUsers = res.data.filter( user => user.email !== getUserEmail)
+                this.setState({ users: otherUsers })
             })
     }
 
@@ -59,13 +48,12 @@ class Home extends Component {
             .then(res =>
                 this.setState({
                     matches: res.data
-                    // set current open match as this one ^ that was just started
                 })
             )
             .catch(() =>
                 this.setState({
                     matches: [],
-                    message: "No Current Matches"
+                    noMatchesMessage: "Couldn't find matches"
                 })
             );
     }
@@ -82,6 +70,7 @@ class Home extends Component {
     };
     handleSubmit = (event) => {
         event.preventDefault();
+        if (this.state.betTyped === '') return
         let bet = { bet: this.state.betTyped }
         API.addBet(this.state.currentMatchId, bet)
             .then(() => {
@@ -98,18 +87,16 @@ class Home extends Component {
 
     checkContent = () => {
         // Filters out users whose names don't match the typed input
-        let userTyped = this.state.userTyped;
+        let { users, userTyped } = this.state;
         if (userTyped !== '') {
-            let matchingUsers = this.state.users.filter(user => {
-                let currentLetters = userTyped.toLowerCase();
-                let firstNameSubstring = user.firstName.slice(0, currentLetters.length).toLowerCase();
-                let lastNameSubstring = user.lastName.slice(0, currentLetters.length).toLowerCase();
-                return currentLetters === firstNameSubstring || currentLetters === lastNameSubstring;
-            })
+            let currentLetters = userTyped.toLowerCase();
+            let matchingUsers = users.filter( user => 
+            currentLetters === user.firstName.slice(0, currentLetters.length).toLowerCase() 
+            || currentLetters === user.lastName.slice(0, currentLetters.length).toLowerCase() )
 
             this.setState({
                 filtered: matchingUsers
-            })
+            })  
         }
         else {
             this.setState({
@@ -118,19 +105,17 @@ class Home extends Component {
         }
     };
 
-    nameClicked = (id, email, fName, lName) => {
+    nameClicked = (email, fName, lName) => {
         const fullName = `${fName} ${lName}`;
         this.setState({
-            // dont think i need any of these except modalName (maybe email)
             showModal: true,
-            modalId: id,
             modalEmail: email,
             modalName: fullName
         })
     }
 
     handleCloseModal = () => {
-        this.setState({ showModal: false });
+        this.setState({ showModal: false, userTyped: '' }, this.checkContent);
     }
 
     yesStartMatch = () => {
@@ -148,7 +133,7 @@ class Home extends Component {
             .then(res => {
                 this.reworkDataForUI(res.data.scores, res.data.propBets, opponentName);
             })
-        this.setState({ currentMatchId: matchId })
+        this.setState({ currentMatchId: matchId, opponentName: opponentName })
     }
 
     reworkDataForUI = (scores, propLabels, oppName) => {
@@ -218,6 +203,34 @@ class Home extends Component {
         }
     }
 
+    pickedYesOrNo = (betId, selection) => {
+        if (selection) {
+            API.yesChosen(this.state.currentMatchId, { betId: betId, val: 'Yes' })
+                .then(() => this.getAllBets());
+        }
+        else {
+            API.yesChosen(this.state.currentMatchId, { betId: betId, val: 'No' })
+                .then(() => this.getAllBets());
+        }
+    }
+
+    pickedWonOrLost = (betId, selection) => {
+        if (selection) {
+            let newUserScore = parseInt(this.state.youser[1]) + 1;
+            let myString = `${this.state.youser[0]} ${newUserScore}`;
+            let oppString = `${this.state.oppser[0]} ${this.state.oppser[1]}`;
+            API.wonLostChosen(this.state.currentMatchId, { myString: myString, oppString: oppString, betId: betId, won: this.state.userFullName })
+                .then(() => this.setCurrentOpenMatch(this.state.currentMatchId, this.state.opponentName));
+        }
+        else {
+            let newOppScore = parseInt(this.state.oppser[1]) + 1;
+            let oppString = `${this.state.oppser[0]} ${newOppScore}`;
+            let myString = `${this.state.youser[0]} ${this.state.youser[1]}`;
+            API.wonLostChosen(this.state.currentMatchId, { myString: myString, oppString: oppString, betId: betId, won: this.state.opponentName })
+                .then(() => this.setCurrentOpenMatch(this.state.currentMatchId, this.state.opponentName));
+        }
+    }
+
     render() {
         return (
             <div className="Home static bg-blue-200">
@@ -243,7 +256,7 @@ class Home extends Component {
                 </div>
                 {this.state.filtered.length ?
                     (this.state.filtered.map(user =>
-                        <div key={user._id} onClick={() => this.nameClicked(user._id, user.email, user.firstName, user.lastName)}>
+                        <div key={user._id} onClick={() => this.nameClicked(user.email, user.firstName, user.lastName)}>
                             <DropDownName key={user._id} {...user} />
                         </div>)
                     )
@@ -267,7 +280,7 @@ class Home extends Component {
                                 {this.opponentName(match.names)}
                             </div>)
                         )
-                        : (<p>{this.state.message}</p>)
+                        : (<p>{this.state.noMatchesMessage}</p>)
                     }
                 </div>
                 {/* MATCHES */}
@@ -285,16 +298,20 @@ class Home extends Component {
                                     <div className="currentPropBets">
                                         <button
                                             onClick={this.flipBetStarted}
-                                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">{this.state.createBetStarted ? 'Clear' : 'Create New Bet'}
+                                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">
+                                            {this.state.createBetStarted ? 'Clear' : 'Create New Bet'}
                                         </button>
                                         {this.state.createBetStarted ?
                                             (<form onSubmit={this.handleSubmit}>
-                                                <textarea
+                                                <input
+                                                    className="w-5/12"
                                                     name={'betTyped'}
                                                     value={this.state.betTyped}
                                                     onChange={this.handlePropBetChange}
+                                                    placeholder='Ex: Kawhi will score at least 20 points tonight'
+                                                    autoComplete='off'
                                                 />
-                                                <input type="submit" value="Submit" />
+                                                <button type="submit">Submit</button>
                                             </form>)
                                             :
                                             (null)
@@ -302,9 +319,42 @@ class Home extends Component {
                                     </div>
                                     {this.state.propLabels.length ?
                                         (this.state.propLabels.map(propBet =>
-                                            <p key={propBet._id}>
+                                            <div
+                                                key={propBet._id}
+                                                className="border border-gray-700"
+                                            >
                                                 {propBet.propLabels}
-                                            </p>)
+                                                <button
+                                                    className={propBet.selected === 'Yes' ? 'bg-green-300 font-bold rounded-full'
+                                                        : 'bg-gray-300 font-bold rounded-full'}
+                                                    onClick={() => this.pickedYesOrNo(propBet._id, true)}
+                                                >
+                                                    Yes
+                                                </button>
+                                                <button
+                                                    className={propBet.selected === 'No' ? 'bg-green-300 font-bold rounded-full'
+                                                        : 'bg-gray-300 font-bold rounded-full'}
+                                                    onClick={() => this.pickedYesOrNo(propBet._id, false)}
+                                                >
+                                                    No
+                                                </button>
+                                                {propBet.selected !== 'notYet' ?
+                                                    (
+                                                        <div>
+                                                            <button
+                                                                onClick={() => this.pickedWonOrLost(propBet._id, true)}
+                                                            >
+                                                                I Won
+                                                            </button>
+                                                            <button
+                                                                onClick={() => this.pickedWonOrLost(propBet._id, false)}
+                                                            >
+                                                                I Lost
+                                                            </button>
+                                                        </div>
+                                                    )
+                                                    : (null)}
+                                            </div>)
                                         )
                                         :
                                         (<p>No Bets</p>)
@@ -312,14 +362,10 @@ class Home extends Component {
                                 </div>
                                 <div>
 
-                                    <button onClick={this.upScoreBy1}>I Won</button>
-                                    <button onClick={this.downScoreBy1}>I Lost</button>
                                     <p>Total Score: {this.whatIsTheScore()}</p>
 
                                 </div>
-                                {/* DETAILS: 
-                                -Your Total bets Won: {this.props.youser[1]}
-                                -Opponent Total bets Won: {this.props.oppser[1]} */}
+
                             </div>
                         )
                         : (null)
