@@ -67,7 +67,6 @@ module.exports = {
     },
 
     remove: function (req, res) {
-        console.log(req.params.matchId)
         db.Match.findOneAndUpdate({ _id: req.params.matchId },
         { $pull: { propBets: { _id: req.params.betId }}},
         { useFindAndModify: false })

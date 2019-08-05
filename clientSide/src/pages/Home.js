@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import API from '../utils/API';
-import DropDownName from '../components/DropDownName';
-// import DropDownMatch from '../components/DropDownMatch';
 import ReactModal from 'react-modal';
+import DropDownName from '../components/DropDownName';
+import Matches from '../components/Matches';
 
 
 class Home extends Component {
@@ -137,8 +137,8 @@ class Home extends Component {
     }
 
     reworkDataForUI = (scores, propLabels, oppName) => {
-        let user1Data = scores[0].split(' ')
-        let user2Data = scores[1].split(' ')
+        let user1Data = scores[0].split(' ');
+        let user2Data = scores[1].split(' ');
         this.state.userEmail === user1Data[0] ?
             this.setState({
                 youser: user1Data,
@@ -177,31 +177,11 @@ class Home extends Component {
         }
     }
 
-    upScoreBy1 = () => {
-        let anotherCopy = this.state.currentScore
-        anotherCopy++
-        this.setState({ currentScore: anotherCopy })
-    }
-    downScoreBy1 = () => {
-        let someCopy = this.state.currentScore
-        someCopy--
-        this.setState({ currentScore: someCopy })
-    }
-
     flipBetStarted = () => {
         this.setState({ createBetStarted: !this.state.createBetStarted })
     }
 
-    opponentName = (nameArray) => {
-        let person1 = nameArray[0].split(' ');
-        let person2 = nameArray[1].split(' ');
-        if (person1[0] === this.state.userEmail) {
-            return `${person2[1]} ${person2[2]}`
-        }
-        else {
-            return `${person1[1]} ${person1[2]}`
-        }
-    }
+
 
     pickedYesOrNo = (betId, selection) => {
         if (selection) {
@@ -273,21 +253,17 @@ class Home extends Component {
 
 
                 {/* MATCHES */}
-                <div className="absolute top-0 right-0 mt-12 mr-32">
-                    <h3 className=""> Matches </h3>
-                    {this.state.matches.length ?
-                        (this.state.matches.map(match =>
-                            <div
-                                key={match._id}
-                                onClick={() => this.setCurrentOpenMatch(match._id, this.opponentName(match.names))}
-                                className="w-40 rounded-sm shadow-md text-center bg-black text-white hover:bg-gray-800 cursor-pointer"
-                            >
-                                {this.opponentName(match.names)}
-                            </div>)
-                        )
-                        : (<p>{this.state.noMatchesMessage}</p>)
-                    }
-                </div>
+                {this.state.matches.length ?
+                    (
+                        <Matches 
+                            userEmail={this.state.userEmail}
+                            matches={this.state.matches}
+                            setMatch={this.setCurrentOpenMatch}
+                        />
+
+                    )
+                    : (<p>{this.state.noMatchesMessage}</p>)
+                }
                 {/* MATCHES */}
 
 
