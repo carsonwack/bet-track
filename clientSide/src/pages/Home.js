@@ -3,6 +3,8 @@ import API from '../utils/API';
 import ReactModal from 'react-modal';
 import DropDownName from '../components/DropDownName';
 import Matches from '../components/Matches';
+import CreateNewBet from '../components/CreateNewBet';
+import OpenBets from '../components/OpenBets';
 
 
 class Home extends Component {
@@ -25,7 +27,8 @@ class Home extends Component {
         currentMatchId: '',
         betTyped: '',
         userTyped: '',
-        noMatchesMessage: 'No current matches'
+        noMatchesMessage: 'No current matches',
+        // openOrCompleted: true
     }
 
     componentDidMount() {
@@ -136,7 +139,7 @@ class Home extends Component {
         this.setState({ currentMatchId: matchId, opponentName: opponentName })
     }
 
-    reworkDataForUI = (scores, propLabels, oppName) => {
+    reworkDataForUI = (scores, propLabels) => {
         let user1Data = scores[0].split(' ');
         let user2Data = scores[1].split(' ');
         this.state.userEmail === user1Data[0] ?
@@ -165,12 +168,13 @@ class Home extends Component {
     }
 
     whatIsTheScore = () => {
-        let totalScoreCopy = this.state.currentScore;
-        if (totalScoreCopy > 0) {
-            return `Up by ${totalScoreCopy}`
+        console.log('hit')
+        const { currentScore } = this.state;
+        if (currentScore > 0) {
+            return `Up by ${currentScore}`
         }
-        else if (totalScoreCopy < 0) {
-            return `Down by ${Math.abs(totalScoreCopy)}`
+        else if (currentScore < 0) {
+            return `Down by ${Math.abs(currentScore)}`
         }
         else {
             return 'Tied'
@@ -180,7 +184,6 @@ class Home extends Component {
     flipBetStarted = () => {
         this.setState({ createBetStarted: !this.state.createBetStarted })
     }
-
 
 
     pickedYesOrNo = (betId, selection) => {
@@ -216,14 +219,13 @@ class Home extends Component {
             .then(() => this.getAllBets());
     }
 
+    // flipOpenCompleted = () => {
+    //     this.setState({ openOrCompleted: !this.state.openOrCompleted })
+    // }
+
     render() {
         return (
             <div className="Home static bg-blue-200">
-                <div className="border-2 border-gray-600">
-                    <h1>Home</h1>
-                </div>
-                <br />
-                <br />
 
 
                 {/* SEARCH USERS */}
@@ -255,7 +257,7 @@ class Home extends Component {
                 {/* MATCHES */}
                 {this.state.matches.length ?
                     (
-                        <Matches 
+                        <Matches
                             userEmail={this.state.userEmail}
                             matches={this.state.matches}
                             setMatch={this.setCurrentOpenMatch}
@@ -275,86 +277,35 @@ class Home extends Component {
                     {this.state.youser ?
                         (
                             <div>
-                                <div> Bets:
-                                    <div className="currentPropBets">
-                                        <button
-                                            onClick={this.flipBetStarted}
-                                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">
-                                            {this.state.createBetStarted ? 'Clear' : 'Create New Bet'}
-                                        </button>
-                                        {this.state.createBetStarted ?
-                                            (<form onSubmit={this.handleSubmit}>
-                                                <input
-                                                    className="w-5/12"
-                                                    name={'betTyped'}
-                                                    value={this.state.betTyped}
-                                                    onChange={this.handlePropBetChange}
-                                                    placeholder='Ex: Kawhi will score at least 20 points tonight'
-                                                    autoComplete='off'
-                                                />
-                                                <button type="submit">Submit</button>
-                                            </form>)
-                                            :
-                                            (null)
-                                        }
-                                    </div>
-                                    {this.state.propLabels.length ?
-                                        (this.state.propLabels.map(propBet =>
-                                            <div
-                                                key={propBet._id}
-                                                className="border border-gray-700"
-                                            >
-                                                {propBet.propLabels}
-                                                <button
-                                                    className={propBet.selected === 'Yes' ? 'bg-green-300 font-bold rounded-full'
-                                                        : 'bg-gray-300 font-bold rounded-full'}
-                                                    onClick={() => this.pickedYesOrNo(propBet._id, true)}
-                                                >
-                                                    Yes
-                                                </button>
-                                                <button
-                                                    className={propBet.selected === 'No' ? 'bg-green-300 font-bold rounded-full'
-                                                        : 'bg-gray-300 font-bold rounded-full'}
-                                                    onClick={() => this.pickedYesOrNo(propBet._id, false)}
-                                                >
-                                                    No
-                                                </button>
-                                                <div
-                                                    className="cursor-pointer"
-                                                    onClick={() => this.deletePropBet(propBet._id)}>
-                                                    x
-                                                </div>
-                                                {propBet.selected !== 'notYet' ?
-                                                    (
-                                                        <div>
-                                                            <button
-                                                                onClick={() => this.pickedWonOrLost(propBet._id, true)}
-                                                            >
-                                                                I Won
-                                                            </button>
-                                                            <button
-                                                                onClick={() => this.pickedWonOrLost(propBet._id, false)}
-                                                            >
-                                                                I Lost
-                                                            </button>
-                                                        </div>
-                                                    )
-                                                    : (null)}
-                                            </div>)
-                                        )
-                                        :
-                                        (<p>No Bets</p>)
-                                    }
-                                </div>
-                                <div>
+                                {/* <button onClick={this.flipOpenCompleted} >
+                                    {this.state.openOrCompleted ? 'View Completed Bets' : 'View Open Bets'}
+                                </button> */}
+                                <CreateNewBet
+                                    opponentName={this.state.opponentName}
+                                    flipBetStarted={this.flipBetStarted}
+                                    createBetStarted={this.state.createBetStarted}
+                                    handleSubmit={this.handleSubmit}
+                                    betTyped={this.state.betTyped}
+                                    handlePropBetChange={this.handlePropBetChange}
+                                />
 
-                                    <p>Total Score: {this.whatIsTheScore()}</p>
+                                {this.state.propLabels.length ?
+                                    (
+                                        <OpenBets
+                                            propLabels={this.state.propLabels}
+                                            pickedYesOrNo={this.pickedYesOrNo}
+                                            deletePropBet={this.deletePropBet}
+                                            pickedWonOrLost={this.pickedWonOrLost}
+                                        />
+                                    )
+                                    :
+                                    (<p>No Bets</p>)
+                                }
 
-                                </div>
-
+                                <p>Total Score: {this.whatIsTheScore()}</p>
                             </div>
                         )
-                        : (null)
+                        : (<p>Select a Match from the right</p>)
                     }
                 </div>
                 {/* CURRENT OPEN MATCH */}
