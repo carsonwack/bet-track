@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import API from '../utils/API';
-import ReactModal from 'react-modal';
 import DropDownName from '../components/DropDownName';
 import Matches from '../components/Matches';
 import CreateNewBet from '../components/CreateNewBet';
 import OpenBets from '../components/OpenBets';
+import ClosedBets from '../components/ClosedBets';
+import Modal from '../components/Modal';
 
 
 class Home extends Component {
@@ -28,7 +29,7 @@ class Home extends Component {
         betTyped: '',
         userTyped: '',
         noMatchesMessage: 'No current matches',
-        // openOrCompleted: true
+        openOrCompleted: true
     }
 
     componentDidMount() {
@@ -168,7 +169,6 @@ class Home extends Component {
     }
 
     whatIsTheScore = () => {
-        console.log('hit')
         const { currentScore } = this.state;
         if (currentScore > 0) {
             return `Up by ${currentScore}`
@@ -202,14 +202,14 @@ class Home extends Component {
             let newUserScore = parseInt(this.state.youser[1]) + 1;
             let myString = `${this.state.youser[0]} ${newUserScore}`;
             let oppString = `${this.state.oppser[0]} ${this.state.oppser[1]}`;
-            API.wonLostChosen(this.state.currentMatchId, { myString: myString, oppString: oppString, betId: betId, won: this.state.userFullName })
+            API.wonLostChosen(this.state.currentMatchId, { myString: myString, oppString: oppString, betId: betId, won: this.state.youser[0] })
                 .then(() => this.setCurrentOpenMatch(this.state.currentMatchId, this.state.opponentName));
         }
         else {
             let newOppScore = parseInt(this.state.oppser[1]) + 1;
             let oppString = `${this.state.oppser[0]} ${newOppScore}`;
             let myString = `${this.state.youser[0]} ${this.state.youser[1]}`;
-            API.wonLostChosen(this.state.currentMatchId, { myString: myString, oppString: oppString, betId: betId, won: this.state.opponentName })
+            API.wonLostChosen(this.state.currentMatchId, { myString: myString, oppString: oppString, betId: betId, won: this.state.oppser[0] })
                 .then(() => this.setCurrentOpenMatch(this.state.currentMatchId, this.state.opponentName));
         }
     }
@@ -219,9 +219,9 @@ class Home extends Component {
             .then(() => this.getAllBets());
     }
 
-    // flipOpenCompleted = () => {
-    //     this.setState({ openOrCompleted: !this.state.openOrCompleted })
-    // }
+    flipOpenCompleted = () => {
+        this.setState({ openOrCompleted: !this.state.openOrCompleted })
+    }
 
     render() {
         return (
@@ -273,41 +273,46 @@ class Home extends Component {
 
 
                 {/* CURRENT OPEN MATCH */}
-                <div>
-                    {this.state.youser ?
-                        (
-                            <div>
-                                {/* <button onClick={this.flipOpenCompleted} >
-                                    {this.state.openOrCompleted ? 'View Completed Bets' : 'View Open Bets'}
-                                </button> */}
-                                <CreateNewBet
-                                    opponentName={this.state.opponentName}
-                                    flipBetStarted={this.flipBetStarted}
-                                    createBetStarted={this.state.createBetStarted}
-                                    handleSubmit={this.handleSubmit}
-                                    betTyped={this.state.betTyped}
-                                    handlePropBetChange={this.handlePropBetChange}
-                                />
-
-                                {this.state.propLabels.length ?
-                                    (
+                {this.state.youser ?
+                    (
+                        <div>
+                            <button onClick={this.flipOpenCompleted} >
+                                {this.state.openOrCompleted ? 'View Bet History' : 'View Open Bets'}
+                            </button>
+                            {this.state.openOrCompleted ?
+                                (
+                                    <div>
+                                        <CreateNewBet
+                                            opponentName={this.state.opponentName}
+                                            flipBetStarted={this.flipBetStarted}
+                                            createBetStarted={this.state.createBetStarted}
+                                            handleSubmit={this.handleSubmit}
+                                            betTyped={this.state.betTyped}
+                                            handlePropBetChange={this.handlePropBetChange}
+                                        />
                                         <OpenBets
                                             propLabels={this.state.propLabels}
                                             pickedYesOrNo={this.pickedYesOrNo}
                                             deletePropBet={this.deletePropBet}
                                             pickedWonOrLost={this.pickedWonOrLost}
                                         />
-                                    )
-                                    :
-                                    (<p>No Bets</p>)
-                                }
+                                    </div>
+                                )
+                                :
+                                (
+                                    <ClosedBets
+                                        propLabels={this.state.propLabels}
+                                        youserEmail={this.state.userEmail}
+                                    />
+                                )
+                            }
+
 
                                 <p>Total Score: {this.whatIsTheScore()}</p>
-                            </div>
-                        )
-                        : (<p>Select a Match from the right</p>)
-                    }
-                </div>
+                        </div>
+                    )
+                    : (<p>Select a Match from the right</p>)
+                }
                 {/* CURRENT OPEN MATCH */}
 
 
@@ -316,38 +321,19 @@ class Home extends Component {
 
 
 
-                <ReactModal
-                    isOpen={this.state.showModal}
-                    contentLabel={this.state.modalName}
-                    ariaHideApp={false}
-                    style={customStyles}
-                >
-                    <p className="font-bold">Start a match with {this.state.modalName} ?</p>
-                    <div
-                        onClick={this.yesStartMatch}
-                        className="cursor-pointer object-right-top">
-                        Yes
-                    </div>
-                    <div
-                        onClick={this.handleCloseModal}
-                        className="cursor-pointer object-right-top">
-                        No
-                        </div>
-                </ReactModal>
+
+
+                <Modal
+                    showModal={this.state.showModal}
+                    modalName={this.state.modalName}
+                    yesStartMatch={this.yesStartMatch}
+                    handleCloseModal={this.handleCloseModal}
+                />
             </div>
         )
     }
 }
 
-const customStyles = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)'
-    }
-};
+
 
 export default Home; 

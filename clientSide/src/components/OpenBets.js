@@ -1,57 +1,52 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class OpenBets extends Component {
-    render() {
-
-        const { propLabels, pickedYesOrNo, deletePropBet, pickedWonOrLost } = this.props;
-
-        return (
-            propLabels.map( propBet =>
-                <div
-                    key={propBet._id}
-                    className="border border-gray-700"
+const OpenBets = ({ propLabels, pickedYesOrNo, deletePropBet, pickedWonOrLost }) => {
+    return (
+        propLabels.filter(propBet => !propBet.whoWon).map( propBet =>
+            <div
+                key={propBet._id}
+                className="border border-gray-700"
+            >
+                {propBet.propLabels}
+                <button
+                    className={propBet.selected === 'Yes' ? 'bg-green-300 font-bold rounded-full'
+                        : 'bg-gray-300 font-bold rounded-full'}
+                    onClick={() => pickedYesOrNo(propBet._id, true)}
                 >
-                    {propBet.propLabels}
-                    <button
-                        className={propBet.selected === 'Yes' ? 'bg-green-300 font-bold rounded-full'
-                            : 'bg-gray-300 font-bold rounded-full'}
-                        onClick={() => pickedYesOrNo(propBet._id, true)}
-                    >
-                        Yes
-                    </button>
-                    <button
-                        className={propBet.selected === 'No' ? 'bg-green-300 font-bold rounded-full'
-                            : 'bg-gray-300 font-bold rounded-full'}
-                        onClick={() => pickedYesOrNo(propBet._id, false)}
-                    >
-                        No
-                    </button>
-                    <div
-                        className="cursor-pointer"
-                        onClick={() => deletePropBet(propBet._id)}
-                    >
-                        x
-                    </div>
-                    {propBet.selected !== 'notYet' && !propBet.whoWon ?
-                        (
-                            <div>
-                                <button
-                                    onClick={() => pickedWonOrLost(propBet._id, true)}
-                                >
-                                    Won
-                                </button>
-                                <button
-                                    onClick={() => pickedWonOrLost(propBet._id, false)}
-                                >
-                                    Lost
-                                </button>
-                            </div>
-                        )
-                        : (null)}                    
-                </div>)
+                    Yes
+                </button>
+                <button
+                    className={propBet.selected === 'No' ? 'bg-green-300 font-bold rounded-full'
+                        : 'bg-gray-300 font-bold rounded-full'}
+                    onClick={() => pickedYesOrNo(propBet._id, false)}
+                >
+                    No
+                </button>
+                <div
+                    className="cursor-pointer"
+                    onClick={() => deletePropBet(propBet._id)}
+                >
+                    x
+                </div>
+                {propBet.selected !== 'notYet' ?
+                    (
+                        <div>
+                            <button
+                                onClick={() => pickedWonOrLost(propBet._id, true)}
+                            >
+                                Won
+                            </button>
+                            <button
+                                onClick={() => pickedWonOrLost(propBet._id, false)}
+                            >
+                                Lost
+                            </button>
+                        </div>
+                    )
+                    : (null)}
+            </div>)
 
-        );
-    }
-}
+    );
+};
 
 export default OpenBets;
