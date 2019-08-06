@@ -81,6 +81,7 @@ class Home extends Component {
                 this.getAllBets();
                 this.setState({ betTyped: '' });
             });
+        this.setState({ createBetStarted: false })
     }
 
     getAllBets = () => {
@@ -264,8 +265,7 @@ class Home extends Component {
                         />
 
                     )
-                    : (<p>{this.state.noMatchesMessage}</p>)
-                }
+                    : (<p>{this.state.noMatchesMessage}</p> )}
                 {/* MATCHES */}
 
 
@@ -314,8 +314,6 @@ class Home extends Component {
                     : (<p>Select a Match from the right</p>)
                 }
                 {/* CURRENT OPEN MATCH */}
-
-
 
 
 
