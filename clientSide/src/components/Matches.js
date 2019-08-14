@@ -17,13 +17,13 @@ class Matches extends Component {
 
         const { userEmail, matches, setMatch } = this.props;
         return (
-            <div className="absolute top-0 right-0 mt-12 mr-32">
-                <h3> Matches </h3>
+            <div className="absolute top-0 right-0 mt-16 mr-32">
+                <h3 className="text-center mb-1 text-xl"> Matches </h3>
                 {matches.map(match => (
                     <div
                         key={match._id}
                         onClick={() => setMatch(match._id, this.opponentName(userEmail, match.names))}
-                        className="w-40 rounded-sm shadow-md text-center bg-black text-white hover:bg-gray-800 cursor-pointer"
+                        className="w-64 py-2 px-2 rounded-sm shadow-md text-lg text-center bg-black text-white hover:bg-gray-800 cursor-pointer"
                     >
                         {this.opponentName(userEmail, match.names)}
                     </div>

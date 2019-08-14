@@ -6,6 +6,7 @@ import CreateNewBet from '../components/CreateNewBet';
 import OpenBets from '../components/OpenBets';
 import ClosedBets from '../components/ClosedBets';
 import Modal from '../components/Modal';
+import Nav from '../components/Nav';
 
 
 class Home extends Component {
@@ -226,31 +227,39 @@ class Home extends Component {
 
     render() {
         return (
-            <div className="Home static bg-blue-200">
+            <div className="Home static">
 
-
-                {/* SEARCH USERS */}
-                <div>
+                <Nav>
+                    {/* SEARCH USERS */}
                     <form
                         onSubmit={e => { e.preventDefault() }}
                     >
                         <input
+                            className="shadow appearance-none border border-green-900 rounded h-10 py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                             placeholder='Search Users'
                             onChange={this.handleInputChange}
                             value={this.state.userTyped}
                             autoComplete='off'
+                            style={{ width: "236.5px" }}
                         />
                     </form>
-                </div>
-                {this.state.filtered.length ?
-                    (this.state.filtered.map(user =>
-                        <div key={user._id} onClick={() => this.nameClicked(user.email, user.firstName, user.lastName)}>
-                            <DropDownName key={user._id} {...user} />
-                        </div>)
-                    )
-                    : (null)
-                }
-                {/* SEARCH USERS */}
+                    <div className="absolute">
+                        {this.state.filtered.length ?
+                            (this.state.filtered.map(user =>
+                                <div
+                                    key={user._id}
+                                    onClick={() => this.nameClicked(user.email, user.firstName, user.lastName)}
+                                >
+                                    <DropDownName key={user._id} {...user} />
+                                </div>)
+                            )
+                            : (null)
+                        }
+                    </div>
+                    {/* SEARCH USERS */}
+                </Nav>
+
+
 
 
 
@@ -265,7 +274,7 @@ class Home extends Component {
                         />
 
                     )
-                    : (<p>{this.state.noMatchesMessage}</p> )}
+                    : (<p>{this.state.noMatchesMessage}</p>)}
                 {/* MATCHES */}
 
 
@@ -306,16 +315,12 @@ class Home extends Component {
                                     />
                                 )
                             }
-
-
-                                <p>Total Score: {this.whatIsTheScore()}</p>
+                            <p>Total Score: {this.whatIsTheScore()}</p>
                         </div>
                     )
                     : (<p>Select a Match from the right</p>)
                 }
                 {/* CURRENT OPEN MATCH */}
-
-
 
 
 

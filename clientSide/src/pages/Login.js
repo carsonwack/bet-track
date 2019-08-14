@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import API from '../utils/API';
-import logo from '../logo.png'
+import logo from '../logo.png';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -10,7 +10,8 @@ class Login extends Component {
     state = {
         email: '',
         firstName: '',
-        lastName: ''
+        lastName: '',
+        howsItWork: false
     };
 
     setName = (res) => {
@@ -28,6 +29,10 @@ class Login extends Component {
 
     login = () => {
         this.props.yesLoggedIn();
+    }
+
+    flipHowsItWork = () => {
+        this.setState({ howsItWork: !this.state.howsItWork })
     }
 
     render() {
@@ -49,11 +54,11 @@ class Login extends Component {
 
         return (
             <div className="container my-20 mx-auto h-full flex text-center justify-center">
-                <div className="w-1/3">
+                <div className="sm:w-full md:w-2/3 lg:w-1/3">
                     <p className="mx-auto text-4xl">Bet-Track</p>
                     <img className="h-16 w-20 mx-auto" src={logo} alt="bet track logo" />
                     <div className="flex">
-                        <div className="mx-auto pl-10 py-10 w-1/3 justify-start">
+                        <div className="mx-auto sm:pl-0 md:pl-10 py-10 w-1/3 justify-start">
                             <GoogleLogin
                                 clientId={process.env.REACT_APP_G_CLIENT_ID}
                                 buttonText="Login"
@@ -64,12 +69,28 @@ class Login extends Component {
                         </div>
                         <div className="w-1/3 justify-end my-auto mx-auto">
                             <p
-                                style={{'boxShadow': '-1px 2px 2px 0px rgba(0, 0, 0, 0.29)'}}
-                                className="rounded-sm cursor-pointer pl-4 pr-2 pb-2 py-2"> How's it work? 
-                            <span><i className="pl-2 fas fa-caret-up align-middle"></i></span></p>
+                                style={{ 'boxShadow': '-1px 2px 2px 0px rgba(0, 0, 0, 0.29)' }}
+                                className="w-40 rounded-sm cursor-pointer pl-4 pr-2 pb-2 py-2"
+                                onClick={this.flipHowsItWork}
+                            > How's it work?
+                            <span><i className={`pl-2 fas fa-caret-${this.state.howsItWork ? 'down' : 'up'} align-middle`}></i></span></p>
                         </div>
                     </div>
+                    {this.state.howsItWork ? (
+                        <div>
+                            <ol className="text-left sm:pl-10 md:pl-20 lg:pl-20">
+                                <li>-Log in</li>
+                                <li>-Find a User (Someone else who's logged in before).</li>
+                                <li>-Click their name to start a match.</li>
+                                <li>-Create new bets for them to answer yes/no to.</li>
+                                <li>-Click 'won' or 'lost' based on the outcome.</li>
+                                <li>-That's it! The site tracks the total score, bet history, etc.</li>
+                            </ol>
+                        </div>
+                    ) : (null)}
                 </div>
+
+
             </div>
 
         )
