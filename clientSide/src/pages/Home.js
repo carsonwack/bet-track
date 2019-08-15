@@ -230,7 +230,7 @@ class Home extends Component {
             <div className="Home static">
 
                 <Nav>
-                    {/* SEARCH USERS */}
+                    {/* USER SEARCH */}
                     <form
                         onSubmit={e => { e.preventDefault() }}
                     >
@@ -256,7 +256,7 @@ class Home extends Component {
                             : (null)
                         }
                     </div>
-                    {/* SEARCH USERS */}
+                    {/* USER SEARCH */}
                 </Nav>
 
 
@@ -274,7 +274,7 @@ class Home extends Component {
                         />
 
                     )
-                    : (<p>{this.state.noMatchesMessage}</p>)}
+                    : (<p >{this.state.noMatchesMessage}</p>)}
                 {/* MATCHES */}
 
 
@@ -284,41 +284,64 @@ class Home extends Component {
                 {/* CURRENT OPEN MATCH */}
                 {this.state.youser ?
                     (
-                        <div>
-                            <button onClick={this.flipOpenCompleted} >
-                                {this.state.openOrCompleted ? 'View Bet History' : 'View Open Bets'}
-                            </button>
-                            {this.state.openOrCompleted ?
-                                (
-                                    <div>
-                                        <CreateNewBet
-                                            opponentName={this.state.opponentName}
-                                            flipBetStarted={this.flipBetStarted}
-                                            createBetStarted={this.state.createBetStarted}
-                                            handleSubmit={this.handleSubmit}
-                                            betTyped={this.state.betTyped}
-                                            handlePropBetChange={this.handlePropBetChange}
-                                        />
-                                        <OpenBets
-                                            propLabels={this.state.propLabels}
-                                            pickedYesOrNo={this.pickedYesOrNo}
-                                            deletePropBet={this.deletePropBet}
-                                            pickedWonOrLost={this.pickedWonOrLost}
-                                        />
-                                    </div>
-                                )
-                                :
-                                (
-                                    <ClosedBets
-                                        propLabels={this.state.propLabels}
-                                        youserEmail={this.state.userEmail}
-                                    />
-                                )
-                            }
-                            <p>Total Score: {this.whatIsTheScore()}</p>
+                        <div className="container my-20 mx-auto h-full flex text-center justify-center">
+                            <div className="relative w-2/3 md:w-1/2 lg:w-2/5 bg-gray-400 rounded-lg shadow-md">
+                                <p className="mx-auto mt-6 tracking-wide text-green-900 font-black uppercase">
+                                    You <span className="px lowercase">vs</span> {this.state.opponentName.split(' ')[0]}
+                                </p>
+                                <button className="absolute top-0 right-0 mt-1 mr-1 px-3 pb-2 text-sm focus:outline-none" onClick={this.flipOpenCompleted} >
+                                    {this.state.openOrCompleted ? 'Bet History' : 'Back'} <i className="ml align-middle fas fa-angle-right"></i>
+                                </button>
+                                <hr className={`mx-auto ${!this.state.openOrCompleted ? 'mb-10' : ''} bg-gray-500 pl-20`} style={{ border: '0', clear: 'both', display: 'block', width: '20%', height: '1px' }} />
+                                {this.state.openOrCompleted ?
+                                    (
+                                        <div>
+                                            <CreateNewBet
+                                                opponentName={this.state.opponentName}
+                                                flipBetStarted={this.flipBetStarted}
+                                                createBetStarted={this.state.createBetStarted}
+                                                handleSubmit={this.handleSubmit}
+                                                betTyped={this.state.betTyped}
+                                                handlePropBetChange={this.handlePropBetChange}
+                                            />
+                                            <div style={{ "maxHeight": "350px", "overflowY": "scroll", "boxShadow": "0px 0px 5px -4px rgba(0,0,0,0.46)"}}>
+                                                <OpenBets
+                                                    propLabels={this.state.propLabels}
+                                                    pickedYesOrNo={this.pickedYesOrNo}
+                                                    deletePropBet={this.deletePropBet}
+                                                    pickedWonOrLost={this.pickedWonOrLost}
+                                                />
+                                            </div>
+                                        </div>
+                                    )
+                                    :
+                                    (
+                                        <div style={{ "maxHeight": "350px", "overflowY": "scroll", "boxShadow": "0px 0px 5px -4px rgba(0,0,0,0.46)"}}>
+                                            <ClosedBets
+                                                propLabels={this.state.propLabels}
+                                                youserEmail={this.state.userEmail}
+                                            />
+                                        </div>
+                                    )
+                                }
+                                <div className="flex justify-center">
+                                    <p
+                                        className="mb-8 mt-8 text-lg text-gray-900 font-black uppercase tracking-wide px-2 pt-2"
+                                        style={{ 'borderBottom': '1px dotted rgb(35, 83, 61)', 'borderRadius': '5px', height: '27.5px' }}
+                                    >
+                                        {this.whatIsTheScore()}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     )
-                    : (<p>Select a Match from the right</p>)
+                    : (
+                        <div className="container my-20 mx-auto h-full flex text-center justify-center">
+                            <div className="w-2/3 md:w-1/2 lg:w-2/5 bg-gray-400 rounded-lg shadow-md">
+                                <p className="py-12">Select a Match <span><i className="ml-2 align-middle fas fa-long-arrow-alt-right"></i></span></p>
+                            </div>
+                        </div>
+                    )
                 }
                 {/* CURRENT OPEN MATCH */}
 

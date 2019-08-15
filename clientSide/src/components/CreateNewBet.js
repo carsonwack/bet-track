@@ -1,33 +1,32 @@
 import React from 'react';
 
-const CreateNewBet = ({ opponentName, flipBetStarted, createBetStarted, handleSubmit, betTyped, handlePropBetChange }) => {
+const CreateNewBet = ({ flipBetStarted, createBetStarted, handleSubmit, betTyped, handlePropBetChange }) => {
     return (
-        <div>
-            <p> You vs {opponentName} </p>
-
-            <div className="currentPropBets">
+            <div className="mt-2 currentPropBets">
                 <button
                     onClick={flipBetStarted}
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full">
-                    {createBetStarted ? 'Clear' : 'Create New Bet'}
+                    className={`${createBetStarted ? 'bg-red-700 hover:bg-red-800' : 'bg-green-900 hover:bg-green-800'} tracking-wide text-white py-2 px-4 rounded border-b-2 border-gray-900 shadow focus:outline-none my-6`}>
+                    {createBetStarted ? 'Clear Bet' : 'New Bet'}
                 </button>
                 {createBetStarted ?
                     (<form onSubmit={handleSubmit}>
                         <input
-                            className="w-5/12"
+                            className="text-green-900 pl-2 ml-8 focus:outline-none"
                             name={'betTyped'}
                             value={betTyped}
                             onChange={handlePropBetChange}
-                            placeholder='Ex: Kawhi will score at least 20 points tonight'
-                            autoComplete='off'
+                            placeholder="'Kawhi will score at least 20 points tonight'"
+                            autoComplete="off"
+                            autoCorrect="off"
+                            spellCheck="false"
+                            style={{ width: "280px", "fontSize": "90%", "borderRadius": "5px"}}
                         />
-                        <button type="submit">Submit</button>
+                        <button className="ml-3 bg-transparent hover:bg-green-900 text-green-900 font-bold hover:text-white pb pt-2 px-2 border border-green-900 hover:border-transparent rounded" type="submit">Submit</button>
                     </form>)
                     :
                     (null)
                 }
             </div>
-        </div>
     );
 };
 
