@@ -3,7 +3,7 @@ import React from 'react';
 const OpenBets = ({ propLabels, youserEmail }) => {
     return (
         propLabels.filter(propBet => propBet.whoWon).map((propBet, i, array) =>
-            <div>
+            <div key={propBet._id}>
                 <div className="flex justify-between">
                     <div
                         key={propBet._id}

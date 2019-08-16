@@ -145,6 +145,9 @@ class Home extends Component {
                 this.reworkDataForUI(res.data.scores, res.data.propBets, opponentName);
             })
         this.setState({ currentMatchId: matchId, opponentName: opponentName })
+        if (!this.state.openOrCompleted) {
+            this.setState({ openOrCompleted: true })
+        }
     }
 
     reworkDataForUI = (scores, propLabels) => {
@@ -280,7 +283,7 @@ class Home extends Component {
                         />
 
                     )
-                    : (<p >{this.state.noMatchesMessage}</p>)}
+                    : (<p>{this.state.noMatchesMessage}</p>)}
                 {/* MATCHES */}
 
 
