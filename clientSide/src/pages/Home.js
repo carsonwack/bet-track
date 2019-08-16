@@ -67,6 +67,9 @@ class Home extends Component {
 
     handleInputChange = (e) => {
         const { value } = e.target;
+        if (this.state.createBetStarted) {
+            this.flipBetStarted()
+        }
         this.setState({ userTyped: value }, () => this.checkContent());
     };
 
@@ -117,8 +120,9 @@ class Home extends Component {
         this.setState({
             showModal: true,
             modalEmail: email,
-            modalName: fullName
-        })
+            modalName: fullName,
+            userTyped: ''
+        }, this.checkContent)
     }
 
     handleCloseModal = () => {
@@ -245,7 +249,7 @@ class Home extends Component {
                             style={{ width: "236.5px" }}
                         />
                     </form>
-                    <div className="absolute">
+                    <div className="absolute z-10">
                         {this.state.filtered.length ?
                             (this.state.filtered.map(user =>
                                 <div

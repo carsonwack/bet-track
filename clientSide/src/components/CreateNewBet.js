@@ -7,7 +7,7 @@ class CreateNewBet extends Component {
         this.betInput = React.createRef();
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         const betInput = this.betInput.current;
         if (betInput) {
             betInput.focus()
@@ -36,10 +36,10 @@ class CreateNewBet extends Component {
                             autoComplete="off"
                             autoCorrect="off"
                             spellCheck="false"
-                            style={{ width: "280px", "fontSize": "90%", "borderRadius": "5px" }}
+                            style={{ width: "280px", fontSize: "90%", borderRadius: "5px" }}
                             ref={this.betInput}
                         />
-                        <button className="ml-4 hover:bg-transparent bg-green-900 hover:text-green-900 text-white py-1 px-2 border hover:border-green-900 border-transparent rounded" type="submit">Submit</button>
+                        <button className="ml-4 hover:bg-transparent bg-green-900 hover:text-green-900 text-white py-1 px-2 border hover:border-green-900 border-transparent rounded focus:outline-none" type="submit">Submit</button>
                     </form>)
                     :
                     (null)

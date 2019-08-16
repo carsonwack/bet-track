@@ -4,7 +4,7 @@ import ReactModal from 'react-modal';
 
 const customStyles = {
     content: {
-        top: '50%',
+        top: '40%',
         left: '50%',
         right: 'auto',
         bottom: 'auto',
@@ -22,17 +22,19 @@ const Modal = ({ showModal, modalName, yesStartMatch, handleCloseModal }) => {
                 ariaHideApp={false}
                 style={customStyles}
             >
-                <p className="font-bold">Start match with {modalName} ?</p>
-                <div
-                    onClick={yesStartMatch}
-                    className="cursor-pointer object-right-top">
-                    Yes
+                <p className="mt-4">Start match with <span className="font-bold">{modalName}</span>?</p>
+                <div className="flex my-6">
+                    <div
+                        onClick={yesStartMatch}
+                        className="mx-auto mr-4 font-bold cursor-pointer object-right-top text-green-900">
+                        Yes
                     </div>
-                <div
-                    onClick={handleCloseModal}
-                    className="cursor-pointer object-right-top">
-                    No
-                        </div>
+                    <div
+                        onClick={handleCloseModal}
+                        className="mx-auto ml-4 font-bold cursor-pointer object-right-top text-red-900">
+                        No
+                    </div>
+                </div>
             </ReactModal>
         </div>
     );
