@@ -28,6 +28,7 @@ class Login extends Component {
     }
 
     login = () => {
+        console.log('got here')
         this.props.yesLoggedIn();
     }
 
