@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const CreateNewBet = ({ flipBetStarted, createBetStarted, handleSubmit, betTyped, handlePropBetChange }) => {
-    return (
+class CreateNewBet extends Component {
+
+    constructor(props) {
+        super(props)
+        this.betInput = React.createRef();
+    }
+
+    componentDidUpdate() {
+        const betInput = this.betInput.current;
+        if (betInput) {
+            betInput.focus()
+        }
+    }
+
+
+    render() {
+
+        const { flipBetStarted, createBetStarted, handleSubmit, betTyped, handlePropBetChange } = this.props;
+        return (
             <div className="mt-2 currentPropBets">
                 <button
                     onClick={flipBetStarted}
@@ -9,25 +26,27 @@ const CreateNewBet = ({ flipBetStarted, createBetStarted, handleSubmit, betTyped
                     {createBetStarted ? 'Clear Bet' : 'New Bet'}
                 </button>
                 {createBetStarted ?
-                    (<form onSubmit={handleSubmit}>
+                    (<form className="mb-4" onSubmit={handleSubmit}>
                         <input
                             className="text-green-900 pl-2 ml-8 focus:outline-none"
                             name={'betTyped'}
                             value={betTyped}
                             onChange={handlePropBetChange}
-                            placeholder="'Kawhi will score at least 20 points tonight'"
+                            placeholder={`"Kawhi will score at least 20 points tonight"`}
                             autoComplete="off"
                             autoCorrect="off"
                             spellCheck="false"
-                            style={{ width: "280px", "fontSize": "90%", "borderRadius": "5px"}}
+                            style={{ width: "280px", "fontSize": "90%", "borderRadius": "5px" }}
+                            ref={this.betInput}
                         />
-                        <button className="ml-3 bg-transparent hover:bg-green-900 text-green-900 font-bold hover:text-white pb pt-2 px-2 border border-green-900 hover:border-transparent rounded" type="submit">Submit</button>
+                        <button className="ml-4 hover:bg-transparent bg-green-900 hover:text-green-900 text-white py-1 px-2 border hover:border-green-900 border-transparent rounded" type="submit">Submit</button>
                     </form>)
                     :
                     (null)
                 }
             </div>
-    );
-};
+        );
+    }
+}
 
 export default CreateNewBet;

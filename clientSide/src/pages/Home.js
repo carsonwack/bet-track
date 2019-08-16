@@ -46,6 +46,7 @@ class Home extends Component {
                 let otherUsers = res.data.filter(user => user.email !== getUserEmail)
                 this.setState({ users: otherUsers })
             })
+
     }
 
     getAllMatches = () => {
@@ -184,7 +185,8 @@ class Home extends Component {
     }
 
     flipBetStarted = () => {
-        this.setState({ createBetStarted: !this.state.createBetStarted })
+        this.setState({ createBetStarted: !this.state.createBetStarted },
+            () => this.state.createBetStarted ? null : this.setState({ betTyped: '' }))
     }
 
 
@@ -292,7 +294,8 @@ class Home extends Component {
                                 <button className="absolute top-0 right-0 mt-1 mr-1 px-3 pb-2 text-sm focus:outline-none" onClick={this.flipOpenCompleted} >
                                     {this.state.openOrCompleted ? 'Bet History' : 'Back'} <i className="ml align-middle fas fa-angle-right"></i>
                                 </button>
-                                <hr className={`mx-auto ${!this.state.openOrCompleted ? 'mb-10' : ''} bg-gray-500 pl-20`} style={{ border: '0', clear: 'both', display: 'block', width: '20%', height: '1px' }} />
+                                <hr className={`mx-auto ${!this.state.openOrCompleted ? 'mb-10' : ''} bg-gray-500 pl-20`}
+                                    style={{ border: '0', clear: 'both', display: 'block', width: '20%', height: '1px' }} />
                                 {this.state.openOrCompleted ?
                                     (
                                         <div>
@@ -304,7 +307,7 @@ class Home extends Component {
                                                 betTyped={this.state.betTyped}
                                                 handlePropBetChange={this.handlePropBetChange}
                                             />
-                                            <div style={{ "maxHeight": "350px", "overflowY": "scroll", "boxShadow": "0px 0px 5px -4px rgba(0,0,0,0.46)"}}>
+                                            <div style={{ "maxHeight": "350px", "overflowY": "scroll", "boxShadow": "0px 0px 5px -4px rgba(0,0,0,0.46)" }}>
                                                 <OpenBets
                                                     propLabels={this.state.propLabels}
                                                     pickedYesOrNo={this.pickedYesOrNo}
@@ -316,7 +319,7 @@ class Home extends Component {
                                     )
                                     :
                                     (
-                                        <div style={{ "maxHeight": "350px", "overflowY": "scroll", "boxShadow": "0px 0px 5px -4px rgba(0,0,0,0.46)"}}>
+                                        <div style={{ "maxHeight": "350px", "overflowY": "scroll", "boxShadow": "0px 0px 5px -4px rgba(0,0,0,0.46)" }}>
                                             <ClosedBets
                                                 propLabels={this.state.propLabels}
                                                 youserEmail={this.state.userEmail}
@@ -338,7 +341,7 @@ class Home extends Component {
                     : (
                         <div className="container my-20 mx-auto h-full flex text-center justify-center">
                             <div className="w-2/3 md:w-1/2 lg:w-2/5 bg-gray-400 rounded-lg shadow-md">
-                                <p className="py-12">Select a Match <span><i className="ml-2 align-middle fas fa-long-arrow-alt-right"></i></span></p>
+                                <p className="py-12">Select a Match <span><i className="ml-1 align-middle fas fa-long-arrow-alt-right"></i></span></p>
                             </div>
                         </div>
                     )

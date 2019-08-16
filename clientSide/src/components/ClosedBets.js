@@ -5,7 +5,7 @@ const OpenBets = ({ propLabels, youserEmail }) => {
         propLabels.filter(propBet => propBet.whoWon).map( (propBet, i, array) =>
             <div
                 key={propBet._id}
-                className="text-gray-700"
+                className="text-gray-700 text-left tracking-wide mt-2 mx-24"
             >
                 {propBet.propLabels}
 
