@@ -38,6 +38,7 @@ class Login extends Component {
     render() {
 
         const responseGoogle = (response) => {
+            console.log('response', response)
             this.setName(response);
             if (response.tokenObj.id_token) {
                 API.saveUser({
