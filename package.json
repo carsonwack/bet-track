@@ -10,7 +10,7 @@
     "client": "cd clientSide && npm run start",
     "install": "cd clientSide && npm install",
     "build": "cd clientSide && npm run build",
-    "heroku-postbuild": "cd clientSide && npm install && npm run build"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix clientSide && npm run build --prefix clientSide"
   },
   "author": "",
   "license": "ISC",
