@@ -250,6 +250,8 @@ class Home extends Component {
                             value={this.state.userTyped}
                             autoComplete='off'
                             style={{ width: "236.5px" }}
+                            autoCorrect="off"
+                            spellCheck="false"
                         />
                     </form>
                     <div className="absolute z-10">
