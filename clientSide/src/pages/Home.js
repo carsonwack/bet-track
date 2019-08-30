@@ -44,6 +44,10 @@ class Home extends Component {
         API.getAllUsers()
             .then(res => {
                 let otherUsers = res.data.filter(user => user.email !== getUserEmail)
+                for (let user of otherUsers) {
+                    user.firstName = user.firstName[0].toUpperCase() + user.firstName.slice(1)
+                    user.lastName = user.lastName[0].toUpperCase() + user.lastName.slice(1)
+                }
                 this.setState({ users: otherUsers })
             })
 

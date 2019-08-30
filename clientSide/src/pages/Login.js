@@ -17,7 +17,6 @@ class Login extends Component {
     componentDidMount() {
         const getUserEmail = localStorage.getItem('currentUser');
         if (getUserEmail) {
-            console.log('getUserEmail', getUserEmail)
             API.saveUser({ email: getUserEmail })
             .then(() => this.login())
             .then(() => this.props.history.push('/'))
