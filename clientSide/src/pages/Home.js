@@ -244,12 +244,12 @@ class Home extends Component {
                         onSubmit={e => { e.preventDefault() }}
                     >
                         <input
-                            className="shadow appearance-none border border-green-900 rounded h-10 py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+                            className="appearance-none border border-green-900 rounded h-10 py-2 px-3 text-gray-700 leading-tight focus:outline-none"
                             placeholder='Search Users'
                             onChange={this.handleInputChange}
                             value={this.state.userTyped}
                             autoComplete='off'
-                            style={{ width: "236.5px" }}
+                            style={{ width: "236.5px", boxShadow: "0px 0px 20px 0px rgba(0,0,0,0.75)" }}
                             autoCorrect="off"
                             spellCheck="false"
                         />

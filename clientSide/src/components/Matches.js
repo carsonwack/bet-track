@@ -6,9 +6,13 @@ class Matches extends Component {
         let person1 = nameArray[0].split(' ');
         let person2 = nameArray[1].split(' ');
         if (person1[0] === userEmail) {
+            person2[1] = person2[1][0].toUpperCase() + person2[1].slice(1);
+            person2[2] = person2[2][0].toUpperCase() + person2[2].slice(1);
             return `${person2[1]} ${person2[2]}`
         }
         else {
+            person1[1] = person1[1][0].toUpperCase() + person1[1].slice(1);
+            person1[2] = person1[2][0].toUpperCase() + person1[2].slice(1);
             return `${person1[1]} ${person1[2]}`
         }
     }

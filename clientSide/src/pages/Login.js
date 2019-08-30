@@ -14,6 +14,16 @@ class Login extends Component {
         howsItWork: false
     };
 
+    componentDidMount() {
+        const getUserEmail = localStorage.getItem('currentUser');
+        if (getUserEmail) {
+            console.log('getUserEmail', getUserEmail)
+            API.saveUser({ email: getUserEmail })
+            .then(() => this.login())
+            .then(() => this.props.history.push('/'))
+        }
+    }
+
     setName = (res) => {
         this.setState({
             email: res.profileObj.email,
@@ -28,7 +38,6 @@ class Login extends Component {
     }
 
     login = () => {
-        console.log('got here')
         this.props.yesLoggedIn();
     }
 
@@ -39,7 +48,6 @@ class Login extends Component {
     render() {
 
         const responseGoogle = (response) => {
-            console.log('response', response)
             this.setName(response);
             if (response.tokenObj.id_token) {
                 API.saveUser({
